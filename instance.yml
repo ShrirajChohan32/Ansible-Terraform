@@ -1,0 +1,27 @@
+
+- name: integration of terraform and ansible
+  hosts: all
+  become_user: root
+
+  tasks:
+
+  - name: Update the Ec2 instance
+    yum:
+      name: '*'
+      state: latest
+
+  - name: ensure nginx is at the latest version
+    shell: amazon-linux-extras install epel -y
+
+  - name: Install nginx
+    yum:
+      name: nginx
+      state: latest
+
+  - name: Upload default index.html for host
+    copy: src=./index.html dest=/usr/share/nginx/html/ mode=0644
+
+  - name: start nginx
+    service:
+      name: nginx
+      state: started
